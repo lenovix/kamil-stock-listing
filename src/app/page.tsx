@@ -1,103 +1,113 @@
-import Image from "next/image";
+import fs from 'fs';
+import path from 'path';
+import { ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react';
+import DividendYield from '@/components/DividendYield';
 
-export default function Home() {
+type DividendInfo = {
+  cumRegNeg: string;
+  exRegNeg: string;
+  cumCash: string;
+  exCash: string;
+  recordingDate: string;
+  paymentDate: string;
+  dgtSubmission: string;
+};
+
+type Stock = {
+  symbol: string;
+  name: string;
+  price: number;
+  change: number;
+  dividendPerShare: number;
+  dividend: DividendInfo;
+};
+
+async function getStocks(): Promise<Stock[]> {
+  const filePath = path.join(process.cwd(), 'data', 'stocks.json');
+  const jsonData = fs.readFileSync(filePath, 'utf-8');
+  return JSON.parse(jsonData);
+}
+
+export default async function HomePage() {
+  const stocks = await getStocks();
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-200 py-12 px-4">
+      <h1 className="text-4xl font-bold text-center text-gray-800 mb-12">📊 Daftar Saham & Dividen</h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {stocks.map((stock) => {
+          const isPositive = stock.change > 0;
+          const isNegative = stock.change < 0;
+          const trendIcon = isPositive ? <ArrowUpRight size={18} /> :
+                             isNegative ? <ArrowDownRight size={18} /> :
+                             <Minus size={18} />;
+
+          const changeColor = isPositive
+            ? 'text-green-600 bg-green-100'
+            : isNegative
+            ? 'text-red-600 bg-red-100'
+            : 'text-gray-600 bg-gray-100';
+
+          return (
+            <div
+              key={stock.symbol}
+              className="bg-white rounded-2xl shadow-sm hover:shadow-md transition duration-200 p-6 flex flex-col justify-between border border-gray-100"
+            >
+              <div>
+                <div className="mb-4">
+                  <h2 className="text-xl font-semibold text-gray-800">{stock.name}</h2>
+                  <p className="text-sm text-gray-500">{stock.symbol}</p>
+                </div>
+
+                <div className="mb-4">
+                  <p className="text-lg font-bold text-gray-900">Rp {stock.price.toLocaleString()}</p>
+                  <span
+                    className={`mt-2 inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${changeColor}`}
+                  >
+                    {trendIcon}
+                    {stock.change > 0 ? '+' : ''}
+                    {stock.change}%
+                  </span>
+                </div>
+
+                <DividendYield price={stock.price} dividendPerShare={stock.dividendPerShare} />
+
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-gray-700 mt-6">
+                  <div>
+                    <p className="text-gray-500 text-xs">Cum Reg/Neg</p>
+                    <p>{stock.dividend.cumRegNeg}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 text-xs">Ex Reg/Neg</p>
+                    <p>{stock.dividend.exRegNeg}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 text-xs">Cum Tunai</p>
+                    <p>{stock.dividend.cumCash}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 text-xs">Ex Tunai</p>
+                    <p>{stock.dividend.exCash}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 text-xs">Recording Date</p>
+                    <p>{stock.dividend.recordingDate}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 text-xs">Pembayaran</p>
+                    <p>{stock.dividend.paymentDate}</p>
+                  </div>
+                  <div className="col-span-2">
+                    <p className="text-gray-500 text-xs">Penyerahan SKD/DGT</p>
+                    <p>{stock.dividend.dgtSubmission}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </main>
   );
 }

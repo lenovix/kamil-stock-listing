@@ -1,0 +1,50 @@
+[
+  {
+    "symbol": "BBCA",
+    "name": "Bank Central Asia",
+    "price": 8950,
+    "change": 1.2,
+    "dividendPerShare": 45.58,
+    "dividend": {
+      "cumRegNeg": "27 Mei 2025",
+      "exRegNeg": "28 Mei 2025",
+      "cumCash": "2 Juni 2025",
+      "exCash": "3 Juni 2025",
+      "recordingDate": "2 Juni 2025",
+      "paymentDate": "18 Juni 2025",
+      "dgtSubmission": "5 Juni 2025"
+    }
+  },
+  {
+    "symbol": "TLKM",
+    "name": "Telkom Indonesia",
+    "price": 4100,
+    "change": -0.3,
+    "dividendPerShare": 45.58,
+    "dividend": {
+      "cumRegNeg": "27 Mei 2025",
+      "exRegNeg": "28 Mei 2025",
+      "cumCash": "2 Juni 2025",
+      "exCash": "3 Juni 2025",
+      "recordingDate": "2 Juni 2025",
+      "paymentDate": "18 Juni 2025",
+      "dgtSubmission": "5 Juni 2025"
+    }
+  },
+  {
+    "symbol": "ASII",
+    "name": "Astra International",
+    "price": 4660,
+    "change": 0.0,
+    "dividendPerShare": 308,
+    "dividend": {
+      "cumRegNeg": "27 Mei 2025",
+      "exRegNeg": "28 Mei 2025",
+      "cumCash": "2 Juni 2025",
+      "exCash": "3 Juni 2025",
+      "recordingDate": "2 Juni 2025",
+      "paymentDate": "18 Juni 2025",
+      "dgtSubmission": "5 Juni 2025"
+    }
+  }
+]
